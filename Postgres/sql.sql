@@ -4,7 +4,7 @@ CREATE SCHEMA public;
 CREATE TABLE profile
 (
   profileUsername VARCHAR(30) NOT NULL,
-  profilePassword VARCHAR(50) NOT NULL,
+  profilePasswordHash VARCHAR(50) NOT NULL,
   profilePoints INT NOT NULL,
   profileEmail VARCHAR(50) NOT NULL,
   profileTotalPoints INT NOT NULL,
