@@ -7,6 +7,7 @@ CREATE TABLE profile
   profilePassword VARCHAR(50) NOT NULL,
   profilePoints INT NOT NULL,
   profileEmail VARCHAR(50) NOT NULL,
+  profileTotalPoints INT NOT NULL,
   PRIMARY KEY (profileUsername),
   UNIQUE (profileEmail)
 );
