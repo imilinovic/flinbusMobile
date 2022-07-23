@@ -9,6 +9,8 @@ CREATE TABLE profile
   profileEmail VARCHAR(50) NOT NULL,
   profileTotalPoints INT NOT NULL,
   profileToken CHAR(16) NOT NULL,
+  profileName VARCHAR(30) NOT NULL,
+  profileSurname VARCHAR(30) NOT NULL,
   PRIMARY KEY (profileUsername),
   UNIQUE (profileEmail),
   UNIQUE(profileToken)
