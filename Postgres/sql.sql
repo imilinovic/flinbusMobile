@@ -8,7 +8,7 @@ CREATE TABLE profile
   profilePoints INT NOT NULL,
   profileEmail VARCHAR(50) NOT NULL,
   profileTotalPoints INT NOT NULL,
-  profileToken CHAR(16) NOT NULL,
+  profileToken CHAR(32) NOT NULL,
   profileName VARCHAR(30) NOT NULL,
   profileSurname VARCHAR(30) NOT NULL,
   PRIMARY KEY (profileUsername),
