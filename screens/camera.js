@@ -11,34 +11,37 @@ export default function CameraApp() {
     const [hasCameraPermission, setHasCameraPermission] = useState();
     const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
     const [photo, setPhoto] = useState();
+    const [mlPhoto, setMlPhoto] = useState();
 
-    async function sendPhoto() {
+    async function sendPhoto(newPhoto) {
         let apiToken = await AsyncStorage.getItem("apiToken");
         let data = {
             method: 'POST',
             body: JSON.stringify({
                 apiToken: apiToken,
-                image: photo.base64
+                image: newPhoto["base64"]
             }),
             headers: {
                 'Accept':       'application/json',
                 'Content-Type': 'application/json',
             }
         }
-        fetch('https://flinbusmerge.duckdns.org/api/register', data)
+        fetch('https://flinbusmerge.duckdns.org/api/image', data)
             .then( function (response){
                     return response.json();
                 }
             )
             .then( function (data) {
-                console.log(data.image);
+                console.log(data);
+                //console.log(data.image);
                     if(data.success !== true) {
                         alert("Error response from server!");
                     } else {
-                        AsyncStorage.setItem("slika", data.image);
-                        navigation.navigate("Preview");
+                        //AsyncStorage.setItem("slika", data.image);
+                        //navigation.navigate("Preview");
+                        setMlPhoto(data.image);
                     }
-                }
+                }, function (err) {console.log(err);}
             )
 
     }
@@ -67,30 +70,37 @@ export default function CameraApp() {
 
             try 
             {
-                let newPhoto = await cameraRef.current.takePictureAsync(options);
-                setPhoto(newPhoto);
+                var newPhoto = await cameraRef.current.takePictureAsync(options);
+                await setPhoto(newPhoto);
             } catch(exception) {
-                let newPhoto = await cameraRef.current.takePictureAsync(options);
-                setPhoto(newPhoto);
+                var newPhoto = await cameraRef.current.takePictureAsync(options);
+                await setPhoto(newPhoto);
             }
-         
-            await sendPhoto();
+            await sendPhoto(newPhoto);
         };
 
         if (photo) {
-            let savePhoto = () => {
-                MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
-                    setPhoto(undefined);
-                });
-            };
+            // let savePhoto = () => {
+            //     MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
+            //         setPhoto(undefined);
+            //     });
+            // };
+            //
+            // return (
+            //     <SafeAreaView style={styles.container}>
+            //         <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," + photo.base64 }} />
+            //         {hasMediaLibraryPermission ? <Button title="Save" onPress={savePhoto /* TU IDE FUNKCIJA ZA SLANJE SLIKE PRIJE I POSLIJE*/} /> : undefined}
+            //         <Button title="Ping" /*onPress = {posaljiPing() OVO JE FUNKCIJA ZA SLANJE PINGA}*/ />
+            //         <Button title="Discard" onPress={() => setPhoto(undefined)} />
+            //
+            //     </SafeAreaView>
+            // );
+        }
 
+        if(mlPhoto) {
             return (
                 <SafeAreaView style={styles.container}>
-                    <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," + photo.base64 }} />
-                    {hasMediaLibraryPermission ? <Button title="Save" onPress={savePhoto /* TU IDE FUNKCIJA ZA SLANJE SLIKE PRIJE I POSLIJE*/} /> : undefined}
-                    <Button title="Ping" /*onPress = {posaljiPing() OVO JE FUNKCIJA ZA SLANJE PINGA}*/ />
-                    <Button title="Discard" onPress={() => setPhoto(undefined)} />
-
+                    <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," + mlPhoto }} />
                 </SafeAreaView>
             );
         }
