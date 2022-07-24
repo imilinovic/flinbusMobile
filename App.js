@@ -12,6 +12,7 @@ import RegisterApp from './screens/register';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RewardsApp from './screens/rewards';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -24,14 +25,7 @@ function forceUpdate()
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>    
-        <Stack.Screen
-            name = "Register"
-            component={RegisterApp}
-        />
-      </Stack.Navigator>
- 
+    <NavigationContainer> 
       <Tab.Navigator
         options={{
           tabBarIcon: ({focused}) => <SettingsIcon color={focused ? forceUpdate : 'blue'} />
@@ -55,11 +49,21 @@ export default function App() {
           tabBarInactiveTintColor: 'gray',
         })}
       >
-        <Tab.Screen name="Login" component={LoginApp} />
-        <Tab.Screen name="Camera" component={CameraApp} options={{unmountOnBlur: true}}/>
-        <Tab.Screen name="Rewards" component={RewardsApp} />
-      </Tab.Navigator>
+        
+        <Tab.Screen name="Login" component={LoginApp} options={{tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          )}} />
+        <Stack.Screen name="Register" component={RegisterApp} options={{tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="lock" color={color} size={size} />
+          )}}/>
+        <Tab.Screen name="Camera" component={CameraApp} options={{unmountOnBlur: true, tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="camera" color={color} size={size} />
+          )}}/>
+        <Tab.Screen name="Rewards" component={RewardsApp} options={{tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="trophy" color={color} size={size} />
+          )}}/>
 
+      </Tab.Navigator>
     </NavigationContainer>
   )};
 /*    <NavigationContainer>

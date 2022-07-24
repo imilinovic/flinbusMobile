@@ -55,8 +55,10 @@ export default function CameraApp() {
             return (
                 <SafeAreaView style={styles.container}>
                     <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," + photo.base64 }} />
-                    {hasMediaLibraryPermission ? <Button title="Save" onPress={savePhoto} /> : undefined}
+                    {hasMediaLibraryPermission ? <Button title="Save" onPress={savePhoto /* TU IDE FUNKCIJA ZA SLANJE SLIKE PRIJE I POSLIJE*/} /> : undefined}
+                    <Button title="Ping" /*onPress = {posaljiPing() OVO JE FUNKCIJA ZA SLANJE PINGA}*/ />
                     <Button title="Discard" onPress={() => setPhoto(undefined)} />
+
                 </SafeAreaView>
             );
         }
