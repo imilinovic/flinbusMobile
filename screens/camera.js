@@ -31,14 +31,16 @@ export default function CameraApp() {
                 }
             )
             .then( function (data) {
+                console.log(data.image);
                     if(data.success !== true) {
                         alert("Error response from server!");
                     } else {
-
-                        navigation.navigate("Camera");
+                        AsyncStorage.setItem("slika", data.image);
+                        navigation.navigate("Preview");
                     }
                 }
             )
+
     }
 
     useEffect(() => {
