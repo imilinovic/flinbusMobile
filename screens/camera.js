@@ -1,8 +1,9 @@
-import {Text, View, SafeAreaView, Image, Button, StyleSheet} from 'react-native';
+import {Text, View, SafeAreaView, Image, Button, StyleSheet, AsyncStorage} from 'react-native';
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from "expo-media-library";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from 'react';
+import bcrypt from "bcryptjs";
 
 
 export default function CameraApp() {
@@ -10,6 +11,35 @@ export default function CameraApp() {
     const [hasCameraPermission, setHasCameraPermission] = useState();
     const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
     const [photo, setPhoto] = useState();
+
+    async function sendPhoto() {
+        let apiToken = await AsyncStorage.getItem("apiToken");
+        let data = {
+            method: 'POST',
+            body: JSON.stringify({
+                apiToken: apiToken,
+                image: photo.base64
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+        fetch('https://flinbusmerge.duckdns.org/api/register', data)
+            .then( function (response){
+                    return response.json();
+                }
+            )
+            .then( function (data) {
+                    if(data.success !== true) {
+                        alert("Error response from server!");
+                    } else {
+
+                        navigation.navigate("Camera");
+                    }
+                }
+            )
+    }
 
     useEffect(() => {
         (async () => {
@@ -42,7 +72,7 @@ export default function CameraApp() {
                 setPhoto(newPhoto);
             }
          
-         
+            await sendPhoto();
         };
 
         if (photo) {

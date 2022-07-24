@@ -1,52 +1,56 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
-StyleSheet,
-Text,
-View,
-Image,
-TextInput,
-Button,
-TouchableOpacity,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TextInput,
+    Button,
+    TouchableOpacity,
 } from "react-native";
 
-export default function RegisterApp() {
+var bcrypt = require('bcryptjs');
+
+export default function RegisterApp({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [ime, setIme] = useState("");
     const [prezime, setPrezime] = useState("");
     const [username, setUser] = useState("");
     
-    const [shouldShow, setShouldShow] = useState(false);
+    const [showError, setShowError] = useState(false);
 
     function sendRegisterInfo(){
-        const hashedPassword = bcrypt.hashSync(password, '$2a$10$CwTycUXWue0Thq9StjUM0u')
-        /*let data = {
+        let hashedPassword = bcrypt.hashSync(password, '$2a$10$CwTycUXWue0Thq9StjUM0u')
+        let data = {
             method: 'POST',
-            credentials: 'same-origin',
-            mode: 'same-origin',
             body: JSON.stringify({
                 name: ime,
                 surname: prezime,
                 email: email,
-                passwordHash: password,
+                passwordHash: hashedPassword,
                 username: username
             }),
             headers: {
-            'Accept':       'application/json',
-            'Content-Type': 'application/json',
-            'X-CSRFToken':  cookie.load('csrftoken')
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
             }
         }
-        fetch('localhost:3000/api/register', data)
+        fetch('https://flinbusmerge.duckdns.org/api/register', data)
             .then( function (response){
-                if (response.status === 200)
-                {
-
+                    return response.json();
                 }
-            } ) */
-        console.log(shouldShow);
-        setShouldShow(true);
+            )
+            .then( function (data) {
+                    if(data.success !== true) {
+                        setShowError(true);
+                    } else {
+                        setShowError(false);
+                        navigation.navigate("Login");
+                    }
+                }
+            )
     } 
 
     return (
@@ -101,11 +105,11 @@ export default function RegisterApp() {
         </View>
 
         {
-            shouldShow &&
+            showError &&
             (
                 <View>
                     <Text>
-                        Test
+                        Error registering
                     </Text>
                 </View>
             )
