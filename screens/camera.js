@@ -21,59 +21,60 @@ export default function CameraApp() {
     }, []);
 
     if (hasCameraPermission === undefined) {
-        return <Text>Requesting permissions...</Text>
-    } else if (!hasCameraPermission) {
-        return <Text>Permission for camera not granted. Please change this in settings.</Text>
-    }
+            return <Text>Requesting permissions...</Text>
+        } else if (!hasCameraPermission) {
+            return <Text>Permission for camera not granted. Please change this in settings.</Text>
+        }
 
-    let takePic = async () => {
-        let options = {
-            quality: 1,
-            base64: true,
-            exif: false
+        let takePic = async () => {
+            let options = {
+                quality: 1,
+                base64: true,
+                exif: false
+            };
+
+            try 
+            {
+                let newPhoto = await cameraRef.current.takePictureAsync(options);
+                setPhoto(newPhoto);
+            } catch(exception) {
+                let newPhoto = await cameraRef.current.takePictureAsync(options);
+                setPhoto(newPhoto);
+            }
+         
+         
         };
 
-        let newPhoto = await cameraRef.current.takePictureAsync(options);
-        setPhoto(newPhoto);
-    };
+        if (photo) {
+            let savePhoto = () => {
+                MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
+                    setPhoto(undefined);
+                });
+            };
 
-    if (photo) {
-        let sharePic = () => {
-            shareAsync(photo.uri).then(() => {
-                setPhoto(undefined);
-            });
-        };
-
-        let savePhoto = () => {
-            MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
-                setPhoto(undefined);
-            });
-        };
+            return (
+                <SafeAreaView style={styles.container}>
+                    <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," + photo.base64 }} />
+                    {hasMediaLibraryPermission ? <Button title="Save" onPress={savePhoto} /> : undefined}
+                    <Button title="Discard" onPress={() => setPhoto(undefined)} />
+                </SafeAreaView>
+            );
+        }
 
         return (
-            <SafeAreaView style={styles.container}>
-                <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," + photo.base64 }} />
-                <Button title="Share" onPress={sharePic} />
-                {hasMediaLibraryPermission ? <Button title="Save" onPress={savePhoto} /> : undefined}
-                <Button title="Discard" onPress={() => setPhoto(undefined)} />
-            </SafeAreaView>
+            <Camera style={styles.container} ref={cameraRef}>
+                <View style={styles.buttonContainer}>
+                    <Button title="Take Pic" onPress={takePic} />
+                    <StatusBar/>
+                </View>
+            </Camera>
         );
-    }
-
-    return (
-        <Camera style={styles.container} ref={cameraRef}>
-            <View style={styles.buttonContainer}>
-                <Button title="Take Pic" onPress={takePic} />
-            </View>
-            <StatusBar style="auto" />
-        </Camera>
-    );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
+        alignItems: 'stretch',
         justifyContent: 'center',
     },
     buttonContainer: {
