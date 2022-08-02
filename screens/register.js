@@ -9,6 +9,7 @@ import {
     Button,
     TouchableOpacity,
 } from "react-native";
+import SITE_URL from "../consts";
 
 var bcrypt = require('bcryptjs');
 
@@ -37,7 +38,7 @@ export default function RegisterApp({ navigation }) {
                 'Content-Type': 'application/json',
             }
         }
-        fetch('https://flinbusmerge.duckdns.org/api/register', data)
+        fetch(SITE_URL + '/api/register', data)
             .then( function (response){
                     return response.json();
                 }

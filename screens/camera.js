@@ -4,6 +4,7 @@ import * as MediaLibrary from "expo-media-library";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from 'react';
 import bcrypt from "bcryptjs";
+import SITE_URL from "../consts";
 
 
 export default function CameraApp() {
@@ -26,19 +27,15 @@ export default function CameraApp() {
                 'Content-Type': 'application/json',
             }
         }
-        fetch('https://flinbusmerge.duckdns.org/api/image', data)
+        fetch(SITE_URL + '/api/image', data)
             .then( function (response){
                     return response.json();
                 }
             )
             .then( function (data) {
-                console.log(data);
-                //console.log(data.image);
                     if(data.success !== true) {
                         alert("Error response from server!");
                     } else {
-                        //AsyncStorage.setItem("slika", data.image);
-                        //navigation.navigate("Preview");
                         setMlPhoto(data.image);
                     }
                 }, function (err) {console.log(err);}

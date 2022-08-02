@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   AsyncStorage
 } from "react-native";
+import SITE_URL from "../consts";
 
 
 var bcrypt = require('bcryptjs');
@@ -30,7 +31,7 @@ export default function LoginApp({ navigation }) {
               'Content-Type': 'application/json',
             }
         }
-        fetch('https://flinbusmerge.duckdns.org/api/login', data)
+        fetch(SITE_URL + '/api/login', data)
             .then( function (response){
                   return response.json();
                 }
